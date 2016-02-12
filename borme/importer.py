@@ -1,6 +1,7 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
+from django.db import transaction
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -9,8 +10,6 @@ from bormeparser.borme import BormeXML
 from bormeparser.exceptions import BormeDoesntExistException
 from bormeparser.regex import is_company, is_acto_cargo_entrante, regex_empresa_tipo
 from bormeparser.utils import FIRST_BORME
-
-from calendar import monthrange
 
 import datetime
 import logging
@@ -25,6 +24,7 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
+@transaction.atomic
 def _import1(borme):
     """
     borme: bormeparser.Borme
